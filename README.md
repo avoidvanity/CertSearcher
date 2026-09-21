@@ -1,5 +1,5 @@
 # certsearcher
-A recon tool for pulling TLS certificate history from Certificate Transparency logs, built for OSINT/threat-intel workflows where you need to point it at a domain (or a list of them) and get reliable results without babysitting flaky APIs.
+A python based recon tool for pulling TLS certificate history from Certificate Transparency logs, built for OSINT/threat-intel workflows where you need to point it at a domain (or a list of them) and get reliable results without babysitting flaky APIs.
 
 Why this exists
 
