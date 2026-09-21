@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-certsearcher.py - Point-and-shoot TLS certificate / CT-log recon for
+CertSearcher.py - Point-and-shoot TLS certificate / CT-log recon for
 threat intel work. Pulls cert history from crt.sh (with retry/backoff
 for its constant 503s) and falls back to CertSpotter automatically.
 
