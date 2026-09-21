@@ -6,6 +6,7 @@ Why this exists
 crt.sh is the standard source for CT log queries, but its backend is notoriously overloaded and returns 503s constantly under load. This script retries crt.sh with exponential backoff, and if it's still down, automatically falls back to CertSpotter's API meaning a single crt.sh outage doesn't block your recon.
 
 Features
+
 Retry/backoff against crt.sh's frequent 503s
 Automatic CertSpotter fallback if crt.sh fails entirely, with full pagination (walks every page, not just the first)
 Batch mode - point it at a file of domains, one per line
@@ -14,5 +15,6 @@ JSON/CSV export, auto-numbered by default (TLS cert results.json, _2, _3, etc) s
 Zero setup beyond pip install requests
 
 Known limitations
+
 CertSpotter's free API only returns unexpired certs meaning it has no way to include historical/expired issuances, so it's a "what's live right now" fallback, not a full history replacement for crt.sh
 crt.sh has no documented result cap, but very large domains can still time out on their end regardless of retries
