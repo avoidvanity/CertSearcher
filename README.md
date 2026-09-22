@@ -30,7 +30,7 @@ python3 certsearcher.py -f targets.txt --subdomains --out-dir ./recon
 
 ## Install
 ```bash
-git clone <repo-url>
+git clone https://github.com/avoidvanity/CertSearcher/
 cd certsearcher
 pip install -r requirements.txt
 ```
