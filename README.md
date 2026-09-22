@@ -35,6 +35,10 @@ cd certsearcher
 pip install -r requirements.txt
 ```
 
+## Example
+
+![certsearcher running against a domain, showing crt.sh results and certstream results](certsearcher.png)
+
 ## Known limitations
 
 CertSpotter's free API only returns unexpired certs meaning it has no way to include historical/expired issuances, so it's a "what's live right now" fallback, not a full history replacement for crt.sh
