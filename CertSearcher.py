@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CertSearcher.py - Point-and-shoot TLS certificate / CT-log recon for
+cert_history.py - Point-and-shoot TLS certificate / CT-log recon for
 threat intel work. Pulls cert history from crt.sh (with retry/backoff
 for its constant 503s) and falls back to CertSpotter automatically.
 
@@ -166,13 +166,21 @@ def sort_key(r):
 
 def extract_subdomains(records, root_domain):
     names = set()
+    root = root_domain.lower()
     for r in records:
         raw = r.get("name_value") or ""
         for n in raw.split("\n"):
             n = n.strip().lower().lstrip("*.")
-            if n and root_domain.lower() in n:
+            if n and (n == root or n.endswith("." + root)):
                 names.add(n)
     return sorted(names)
+
+
+def safe_filename(domain: str) -> str:
+    """Sanitize a domain string before using it as a filename, so a
+    malformed or malicious batch-file entry (e.g. '../../etc/cron.d/foo')
+    can't write outside --out-dir."""
+    return domain.replace("/", "_").replace("\\", "_").strip()
 
 
 def process_domain(domain, args):
@@ -257,6 +265,9 @@ def main():
                      help="Don't fall back to CertSpotter if crt.sh fails")
     args = ap.parse_args()
 
+    if args.file and (args.json or args.csv):
+        ap.error("--json/--csv are single-domain options; use --out-dir for batch mode (-f)")
+
     domains = []
     if args.file:
         for line in Path(args.file).read_text().splitlines():
@@ -286,7 +297,7 @@ def main():
             for s in subs:
                 print(s)
             if args.out_dir:
-                (Path(args.out_dir) / f"{domain}.txt").write_text("\n".join(subs) + "\n")
+                (Path(args.out_dir) / f"{safe_filename(domain)}.txt").write_text("\n".join(subs) + "\n")
         else:
             print(f"\n--- {domain}: {len(records)} cert records ---")
             for r in records:
@@ -294,7 +305,7 @@ def main():
                 print(f"[{r['source']}] {r.get('not_before')} -> {r.get('not_after')} "
                       f"| issuer={r.get('issuer')} | name={name}")
             if args.out_dir:
-                write_json(records, Path(args.out_dir) / f"{domain}.json")
+                write_json(records, Path(args.out_dir) / f"{safe_filename(domain)}.json")
 
         if not args.file:
             if args.json:
